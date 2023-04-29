@@ -1,0 +1,26 @@
+entryPoints:
+  web80:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: web443
+          scheme: https
+  web443:
+    address: ":443"
+    http:
+      tls:
+        certResolver: acmeResolver
+providers:
+  file:
+    filename: traefik-dynamic.yaml
+
+log:
+  level: DEBUG
+
+certificatesResolvers:
+  acmeResolver:
+    acme:
+      email: novotnr0@gmail.com
+      httpChallenge:
+        entryPoint: web80

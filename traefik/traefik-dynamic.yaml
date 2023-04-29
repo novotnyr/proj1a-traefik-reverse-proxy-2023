@@ -1,0 +1,29 @@
+http:
+  services:
+    spring:
+      loadbalancer:
+        servers:
+          - url: 'http://127.0.0.1:8080'
+          - url: 'http://127.0.0.1:8081'
+    javascript:
+      loadbalancer:
+        servers:
+          - url: 'http://127.0.0.1:3000'
+  routers:
+    backend:
+      rule: "Host(`megaserver`) && PathPrefix(`/api/`)"
+      service: spring
+      entryPoints:
+        - web443
+      middlewares:
+        - removeApiPrefix
+    frontend:
+      rule: "Host(`megaserver`)"
+      service: javascript
+      entryPoints:
+        - web443
+  middlewares:
+    removeApiPrefix:
+      stripPrefix:
+        prefixes:
+          - "/api"
